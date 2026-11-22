@@ -1,0 +1,1666 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Pocket Cycle Buddy ✨</title>
+
+  <!-- iOS / Mobile PWA Home Screen Meta Tags -->
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="Cycle Buddy" />
+  <meta name="theme-color" content="#FFFDF7" />
+
+  <!-- Google Fonts: Fredoka (Chunky Headings) & Nunito (Rounded Body) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <style>
+    /* ==========================================================================
+       NEO-BRUTALIST KAWAII PASTEL DESIGN SYSTEM & TACTILE BUTTONS
+       ========================================================================== */
+    :root {
+      --bg-cream: #FFFDF7;
+      --card-white: #FFFFFF;
+      --ink: #2D232E;
+      --blush: #FFB5C2;
+      --blush-deep: #FF8FA3;
+      --mint: #B8E0D2;
+      --butter: #FDE49E;
+      --lavender: #D4C1EC;
+      --peach: #FFD6BA;
+      --sky: #BDE0FE;
+      --shadow-offset: 3px;
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      margin: 0;
+      background-color: #F4EFE6;
+      color: var(--ink);
+      font-family: 'Nunito', sans-serif;
+      display: flex;
+      justify-content: center;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    h1, h2, h3, .font-fredoka {
+      font-family: 'Fredoka', sans-serif;
+    }
+
+    /* Mobile-First App Container (480px max-width on desktop, full on mobile) */
+    .app-shell {
+      width: 100%;
+      max-width: 480px;
+      min-height: 100vh;
+      background-color: var(--bg-cream);
+      background-image: radial-gradient(#E8DFD1 1.2px, transparent 1.2px);
+      background-size: 18px 18px;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      border-left: 2px solid var(--ink);
+      border-right: 2px solid var(--ink);
+      box-shadow: 0 10px 35px rgba(45, 35, 46, 0.12);
+    }
+
+    @media (max-width: 480px) {
+      .app-shell {
+        border-left: none;
+        border-right: none;
+      }
+    }
+
+    /* Neo-Brutalist Card */
+    .kawaii-card {
+      background: var(--card-white);
+      border: 2.5px solid var(--ink);
+      border-radius: 22px;
+      box-shadow: 4px 4px 0px var(--ink);
+      transition: transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    /* ==========================================================================
+       QUIRKY, SQUISHY 3D TACTILE CSS BUTTONS
+       ========================================================================== */
+    .btn-squish {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.45rem;
+      font-family: 'Fredoka', sans-serif;
+      font-weight: 600;
+      color: var(--ink);
+      border: 2.5px solid var(--ink);
+      border-radius: 18px;
+      box-shadow: 3.5px 3.5px 0px var(--ink);
+      cursor: pointer;
+      user-select: none;
+      transition:
+        transform 0.14s cubic-bezier(0.34, 1.56, 0.64, 1),
+        box-shadow 0.14s cubic-bezier(0.34, 1.56, 0.64, 1),
+        background-color 0.2s ease;
+    }
+
+    .btn-squish:hover {
+      transform: translate(-1px, -1px);
+      box-shadow: 4.5px 4.5px 0px var(--ink);
+    }
+
+    .btn-squish:active {
+      transform: translate(3.5px, 3.5px) scale(0.98);
+      box-shadow: 0px 0px 0px var(--ink);
+    }
+
+    /* Hero Action Button (Extra chunky with shine highlight) */
+    .btn-hero {
+      width: 100%;
+      padding: 15px 20px;
+      font-size: 1.15rem;
+      border-radius: 24px;
+      border-width: 3px;
+      box-shadow: 5px 5px 0px var(--ink);
+      overflow: hidden;
+    }
+
+    .btn-hero::before {
+      content: '';
+      position: absolute;
+      top: 4px;
+      left: 14px;
+      right: 14px;
+      height: 6px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.55);
+      pointer-events: none;
+    }
+
+    .btn-hero:active {
+      transform: translate(5px, 5px) scale(0.985);
+      box-shadow: 0px 0px 0px var(--ink);
+    }
+
+    /* Flow Pills & Symptom Stickers (Stamp down when active!) */
+    .btn-pill {
+      padding: 9px 12px;
+      font-size: 0.9rem;
+      border-radius: 16px;
+      background-color: #FFFFFF;
+    }
+
+    .btn-pill.is-selected {
+      transform: translate(2.5px, 2.5px);
+      box-shadow: 1px 1px 0px var(--ink);
+      animation: stampBounce 0.32s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .btn-sticker {
+      padding: 10px 10px;
+      font-size: 0.85rem;
+      border-radius: 18px;
+      background-color: #FFFDF7;
+      flex-direction: column;
+      gap: 3px;
+      text-align: center;
+    }
+
+    .btn-sticker.is-selected {
+      background-color: var(--butter);
+      transform: translate(2.5px, 2.5px) rotate(-1.5deg);
+      box-shadow: 1px 1px 0px var(--ink);
+      animation: stampBounce 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    @keyframes stampBounce {
+      0% { transform: scale(1) translate(0, 0); }
+      45% { transform: scale(0.92) translate(3.5px, 3.5px); }
+      75% { transform: scale(1.04) translate(1.5px, 1.5px); }
+      100% { transform: scale(1) translate(2.5px, 2.5px); }
+    }
+
+    /* Floating Mascot Idle Animation */
+    @keyframes buddyFloat {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-5px) rotate(2deg); }
+    }
+
+    .mascot-float {
+      animation: buddyFloat 3.2s ease-in-out infinite;
+    }
+
+    /* Confetti Particle Burst */
+    .confetti-piece {
+      position: fixed;
+      pointer-events: none;
+      z-index: 9999;
+      font-size: 1.35rem;
+      animation: confettiFly 1.15s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    @keyframes confettiFly {
+      0% {
+        opacity: 1;
+        transform: translate(0, 0) scale(0.5) rotate(0deg);
+      }
+      100% {
+        opacity: 0;
+        transform: translate(var(--tx), var(--ty)) scale(1.25) rotate(var(--rot));
+      }
+    }
+
+    /* Bottom Navigation Dock */
+    .bottom-nav {
+      position: sticky;
+      bottom: 0;
+      z-index: 40;
+      background: var(--bg-cream);
+      border-top: 2.5px solid var(--ink);
+      padding: 10px 14px calc(10px + env(safe-area-inset-bottom));
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+
+    .nav-btn {
+      padding: 9px 6px;
+      border-radius: 16px;
+      font-size: 0.85rem;
+      background: #FFFFFF;
+    }
+
+    .nav-btn.active {
+      background: var(--blush);
+      transform: translate(2px, 2px);
+      box-shadow: 1.5px 1.5px 0px var(--ink);
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #D7CEC2;
+      border-radius: 999px;
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <!-- TOP HEADER -->
+    <header class="px-4 pt-4 pb-2 flex items-center justify-between">
+      <div class="flex items-center gap-2.5">
+        <div class="w-10 h-10 rounded-2xl bg-[#FFB5C2] border-2 border-[#2D232E] shadow-[2px_2px_0px_#2D232E] flex items-center justify-center text-xl">
+          🍓
+        </div>
+        <div>
+          <h1 class="text-lg font-bold leading-tight tracking-tight">Pocket Cycle Buddy</h1>
+          <p id="header-date-label" class="text-xs font-bold text-[#6E5D6F]">Loading today...</p>
+        </div>
+      </div>
+
+      <button onclick="openDateJumpToday()" class="btn-squish px-3 py-1.5 text-xs bg-[#FDE49E]" title="Jump to Today">
+        📅 Today
+      </button>
+    </header>
+
+    <!-- TOAST / MESSAGE BANNER (Replaces alert()) -->
+    <div id="toast-box" class="fixed top-4 left-1/2 -translate-x-1/2 z-50 hidden max-w-[90vw] w-[420px]">
+      <div class="bg-[#2D232E] text-[#FFFDF7] px-4 py-3 rounded-2xl border-2 border-[#FFB5C2] shadow-[4px_4px_0px_#FFB5C2] flex items-center justify-between gap-3">
+        <span id="toast-text" class="text-sm font-bold">Saved!</span>
+        <button onclick="hideToast()" class="text-xs bg-[#FFB5C2] text-[#2D232E] px-2 py-1 rounded-lg font-extrabold">OK</button>
+      </div>
+    </div>
+
+    <!-- ======================================================================
+         VIEW 1: TODAY (DASHBOARD)
+         ====================================================================== -->
+    <main id="view-today" class="flex-1 px-4 pb-6 space-y-4">
+      <!-- Selected Date Indicator Bar (if viewing/editing a non-today date) -->
+      <div id="editing-date-banner" class="hidden kawaii-card bg-[#D4C1EC] p-2.5 px-3.5 flex items-center justify-between">
+        <span class="text-xs font-extrabold">✏️ Editing log for: <strong id="editing-date-text"></strong></span>
+        <button onclick="openDateJumpToday()" class="btn-squish px-2.5 py-1 text-xs bg-white">Back to Today</button>
+      </div>
+
+      <!-- 1. CYCLE RING & EXPRESSIVE MASCOT HERO CARD -->
+      <section class="kawaii-card p-4 relative overflow-hidden">
+        <!-- Phase Badge -->
+        <div class="flex items-center justify-between mb-2">
+          <span id="phase-badge" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-extrabold border-2 border-[#2D232E] bg-[#FFB5C2] shadow-[2px_2px_0px_#2D232E]">
+            🩸 Cozy Shark Week
+          </span>
+          <span id="cycle-avg-pill" class="text-xs font-extrabold text-[#6E5D6F] bg-[#F6F1E9] px-2.5 py-1 rounded-full border border-[#2D232E]">
+            Avg: 28d cycle
+          </span>
+        </div>
+
+        <!-- Circular SVG Ring + Mascot Center -->
+        <div class="relative flex flex-col items-center justify-center my-1">
+          <div class="relative w-56 h-56 flex items-center justify-center">
+            <svg class="w-full h-full -rotate-90" viewBox="0 0 220 220">
+              <!-- Outer Track -->
+              <circle cx="110" cy="110" r="88" fill="#FFFDF7" stroke="#2D232E" stroke-width="2.5" />
+              <circle cx="110" cy="110" r="88" fill="none" stroke="#EFE8DC" stroke-width="18" />
+              <!-- Predicted Period Arc (last ~5 days of cycle) -->
+              <circle id="ring-period-arc" cx="110" cy="110" r="88" fill="none" stroke="#FFB5C2" stroke-width="18" stroke-linecap="round" stroke-dasharray="553" stroke-dashoffset="460" />
+              <!-- Fertile Window Arc -->
+              <circle id="ring-fertile-arc" cx="110" cy="110" r="88" fill="none" stroke="#B8E0D2" stroke-width="18" stroke-linecap="round" stroke-dasharray="553" stroke-dashoffset="480" />
+              <!-- Current Progress Arc -->
+              <circle id="ring-progress-arc" cx="110" cy="110" r="88" fill="none" stroke="#2D232E" stroke-width="6" stroke-linecap="round" stroke-dasharray="553" stroke-dashoffset="553" />
+            </svg>
+
+            <!-- Center Mascot & Cycle Day Counter -->
+            <div class="absolute inset-0 flex flex-col items-center justify-center text-center px-6">
+              <!-- Custom Reactive SVG Buddy (Tappable for headpats!) -->
+              <button type="button" onclick="petMascot(event)" title="Tap to pet your Cycle Buddy!" class="mascot-float w-20 h-16 flex items-center justify-center mb-0.5 bg-transparent border-0 cursor-pointer focus:outline-none active:scale-90 transition-transform" id="mascot-container">
+                <!-- Populated dynamically by JS based on phase/skin -->
+              </button>
+              <div class="font-fredoka text-2xl font-bold leading-none" id="ring-day-title">Day 1</div>
+              <div class="text-xs font-extrabold text-[#5E4E60] mt-1 leading-tight" id="ring-subtitle">
+                Period is here! Take it easy
+              </div>
+            </div>
+          </div>
+
+          <!-- Mascot Outfit Switcher Pills -->
+          <div class="flex items-center justify-center gap-1.5 mt-1.5 mb-1">
+            <span class="text-[10px] font-extrabold text-[#6E5D6F] mr-0.5">Buddy:</span>
+            <button type="button" data-skin="mochi" onclick="setMascotSkin('mochi')" class="btn-squish px-2 py-0.5 text-[11px] rounded-xl bg-white">☁️ Mochi</button>
+            <button type="button" data-skin="cat" onclick="setMascotSkin('cat')" class="btn-squish px-2 py-0.5 text-[11px] rounded-xl bg-white">🐱 Berry Cat</button>
+            <button type="button" data-skin="bear" onclick="setMascotSkin('bear')" class="btn-squish px-2 py-0.5 text-[11px] rounded-xl bg-white">🧋 Boba Bear</button>
+            <button type="button" data-skin="frog" onclick="setMascotSkin('frog')" class="btn-squish px-2 py-0.5 text-[11px] rounded-xl bg-white">🐸 Froggy</button>
+          </div>
+
+          <!-- Mini Ring Legend -->
+          <div class="flex items-center justify-center gap-3 text-[11px] font-extrabold text-[#5E4E60] mt-1">
+            <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-[#FFB5C2] border border-[#2D232E]"></span> Period</span>
+            <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-[#B8E0D2] border border-[#2D232E]"></span> Fertile Est.</span>
+            <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-[#2D232E]"></span> Today</span>
+          </div>
+        </div>
+
+        <!-- BIG SQUISHY HERO ACTION BUTTON -->
+        <div class="mt-3">
+          <button id="hero-period-btn" onclick="handleHeroPeriodToggle(event)" class="btn-squish btn-hero bg-[#FFB5C2]">
+            <span id="hero-btn-emoji" class="text-2xl">🩸</span>
+            <span id="hero-btn-label">Period Started Today!</span>
+          </button>
+        </div>
+      </section>
+
+      <!-- 2. TWO-TAP DAILY FLOW & SYMPTOM LOGGER -->
+      <section class="kawaii-card p-4 space-y-3.5">
+        <div class="flex items-center justify-between">
+          <h2 class="text-base font-bold">✨ Quick Vibe & Flow Check</h2>
+          <span id="log-status-chip" class="text-[11px] font-extrabold px-2.5 py-0.5 rounded-full bg-[#F6F1E9] border border-[#2D232E]">
+            Tap to log
+          </span>
+        </div>
+
+        <!-- Flow Intensity Pills -->
+        <div>
+          <p class="text-xs font-extrabold text-[#6E5D6F] mb-1.5">Flow Level</p>
+          <div class="grid grid-cols-3 gap-2" id="flow-pills-group">
+            <button type="button" data-flow="light" onclick="toggleFlow('light')" class="btn-squish btn-pill">
+              💧 Light
+            </button>
+            <button type="button" data-flow="medium" onclick="toggleFlow('medium')" class="btn-squish btn-pill">
+              🌊 Medium
+            </button>
+            <button type="button" data-flow="heavy" onclick="toggleFlow('heavy')" class="btn-squish btn-pill">
+              🌋 Heavy
+            </button>
+          </div>
+        </div>
+
+        <!-- Symptom Stickers -->
+        <div>
+          <p class="text-xs font-extrabold text-[#6E5D6F] mb-1.5">How's the body feeling?</p>
+          <div class="grid grid-cols-3 gap-2" id="symptom-stickers-group">
+            <button type="button" data-symptom="cramps" onclick="toggleSymptom('cramps')" class="btn-squish btn-sticker">
+              <span class="text-xl">🤕</span>
+              <span>Cramps</span>
+            </button>
+            <button type="button" data-symptom="cravings" onclick="toggleSymptom('cravings')" class="btn-squish btn-sticker">
+              <span class="text-xl">🍫</span>
+              <span>Cravings</span>
+            </button>
+            <button type="button" data-symptom="sleepy" onclick="toggleSymptom('sleepy')" class="btn-squish btn-sticker">
+              <span class="text-xl">😴</span>
+              <span>Sleepy Sloth</span>
+            </button>
+            <button type="button" data-symptom="spicy" onclick="toggleSymptom('spicy')" class="btn-squish btn-sticker">
+              <span class="text-xl">😤</span>
+              <span>Spicy Mood</span>
+            </button>
+            <button type="button" data-symptom="bloated" onclick="toggleSymptom('bloated')" class="btn-squish btn-sticker">
+              <span class="text-xl">🐡</span>
+              <span>Pufferfish</span>
+            </button>
+            <button type="button" data-symptom="glowing" onclick="toggleSymptom('glowing')" class="btn-squish btn-sticker">
+              <span class="text-xl">✨</span>
+              <span>Main Char</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Daily Self-Care Mini Quests -->
+        <div class="pt-1 border-t-2 border-dashed border-[#E6DDD0]">
+          <p class="text-xs font-extrabold text-[#6E5D6F] mb-1.5">🫧 Tiny Daily Self-Care Quests</p>
+          <div class="grid grid-cols-3 gap-2" id="care-habits-group">
+            <button type="button" data-habit="water" onclick="toggleHabit('water', event)" class="btn-squish btn-pill text-xs">
+              💧 Hydrated
+            </button>
+            <button type="button" data-habit="heat" onclick="toggleHabit('heat', event)" class="btn-squish btn-pill text-xs">
+              🧸 Cozy Rest
+            </button>
+            <button type="button" data-habit="vitamins" onclick="toggleHabit('vitamins', event)" class="btn-squish btn-pill text-xs">
+              💊 Iron/Vits
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- 3. CO-OP PARTNER CARE QUEST CARD -->
+      <section class="kawaii-card p-4 bg-[#FFF8E7]">
+        <div class="flex items-start justify-between gap-2 mb-2">
+          <div>
+            <span class="inline-block text-[11px] font-extrabold uppercase tracking-wider px-2 py-0.5 rounded-md bg-[#FDE49E] border border-[#2D232E] mb-1">
+              💌 Boyfriend Co-Op Quest
+            </span>
+            <h3 id="quest-title" class="text-base font-bold leading-snug">Quest: Boba & Heating Pad</h3>
+          </div>
+          <span class="text-2xl">🧸</span>
+        </div>
+
+        <p id="quest-desc" class="text-xs font-bold text-[#5E4E60] leading-relaxed mb-2.5">
+          Energy is low and cramps are knocking. Optimal partner strategy: deliver warm snacks, zero stressful questions, and extra cuddles.
+        </p>
+
+        <!-- Her Custom Craving / Care Order Selector -->
+        <div class="mb-3 p-2.5 rounded-2xl bg-white/80 border-2 border-[#2D232E]">
+          <div class="flex items-center justify-between mb-1.5">
+            <span class="text-[11px] font-extrabold text-[#5E4E60]">🛍️ Attach Today's Care Request:</span>
+            <button type="button" onclick="toggleCustomSnackEditor()" class="text-[11px] font-extrabold underline text-[#2D232E]">+ Add Custom</button>
+          </div>
+          <div id="snack-request-pills" class="flex flex-wrap gap-1.5">
+            <!-- Populated dynamically -->
+          </div>
+          <div id="custom-snack-form" class="hidden mt-2 flex gap-1.5">
+            <input id="custom-snack-input" type="text" maxlength="26" placeholder="e.g. Matcha Latte 🍵" class="flex-1 px-2.5 py-1 text-xs font-bold rounded-xl border-2 border-[#2D232E] bg-[#FFFDF7] focus:outline-none" />
+            <button type="button" onclick="addCustomSnackOption()" class="btn-squish px-3 py-1 text-xs bg-[#FDE49E]">Add</button>
+          </div>
+        </div>
+
+        <button onclick="copyPartnerPing()" class="btn-squish w-full py-2.5 px-4 text-sm bg-[#B8E0D2]">
+          📋 Copy Care Ping for Boyfriend
+        </button>
+      </section>
+    </main>
+
+    <!-- ======================================================================
+         VIEW 2: CALENDAR & 3-MONTH TRIP FORECAST
+         ====================================================================== -->
+    <main id="view-calendar" class="hidden flex-1 px-4 pb-6 space-y-4">
+      <section class="kawaii-card p-4">
+        <!-- Month Switcher -->
+        <div class="flex items-center justify-between mb-3">
+          <button onclick="changeCalendarMonth(-1)" class="btn-squish w-9 h-9 bg-[#FFFDF7] text-base">◀</button>
+          <div class="text-center">
+            <h2 id="cal-month-title" class="text-lg font-bold">November 2026</h2>
+            <p class="text-[11px] font-bold text-[#6E5D6F]">Tap any date to toggle/edit period</p>
+          </div>
+          <button onclick="changeCalendarMonth(1)" class="btn-squish w-9 h-9 bg-[#FFFDF7] text-base">▶</button>
+        </div>
+
+        <!-- Legend -->
+        <div class="flex flex-wrap items-center justify-center gap-2.5 text-[11px] font-extrabold mb-3 pb-2 border-b-2 border-dashed border-[#E6DDD0]">
+          <span class="flex items-center gap-1"><span class="w-3 h-3 rounded-md bg-[#FFB5C2] border border-[#2D232E]"></span> Logged Period</span>
+          <span class="flex items-center gap-1"><span class="w-3 h-3 rounded-md bg-[#FFD6BA] border border-dashed border-[#2D232E]"></span> Predicted Period</span>
+          <span class="flex items-center gap-1"><span class="w-3 h-3 rounded-md bg-[#B8E0D2] border border-[#2D232E]"></span> Fertile Est.</span>
+        </div>
+
+        <!-- Weekday Headers -->
+        <div class="grid grid-cols-7 gap-1 text-center text-xs font-extrabold text-[#6E5D6F] mb-1.5">
+          <div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div>
+        </div>
+
+        <!-- Days Grid -->
+        <div id="calendar-days-grid" class="grid grid-cols-7 gap-1.5">
+          <!-- Populated dynamically -->
+        </div>
+      </section>
+
+      <!-- Upcoming 3-Month Trip & Adventure Planner Forecast -->
+      <section class="kawaii-card p-4 bg-[#F4FBF8]">
+        <h3 class="text-base font-bold mb-1">✈️ 3-Month Trip & Date Forecast</h3>
+        <p class="text-xs font-bold text-[#5E4E60] mb-3">
+          Check predicted period windows before booking flights, hikes, or weekend getaways:
+        </p>
+        <div id="forecast-list" class="space-y-2">
+          <!-- Populated dynamically -->
+        </div>
+      </section>
+    </main>
+
+    <!-- ======================================================================
+         VIEW 3: HISTORY, SMART STATS & MIGRATION / BACKUP
+         ====================================================================== -->
+    <main id="view-history" class="hidden flex-1 px-4 pb-6 space-y-4">
+      <!-- Cycle Averages & Outlier Toggle -->
+      <section class="kawaii-card p-4">
+        <div class="flex items-center justify-between mb-3">
+          <h2 class="text-base font-bold">📊 Cycle Rhythm Stats</h2>
+          <label class="inline-flex items-center gap-1.5 text-xs font-extrabold cursor-pointer bg-[#FDE49E] px-2.5 py-1 rounded-xl border-2 border-[#2D232E]">
+            <input type="checkbox" id="ignore-outliers-checkbox" checked onchange="toggleOutlierFilter()" class="accent-[#2D232E] w-3.5 h-3.5" />
+            <span>Ignore Outliers</span>
+          </label>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div class="p-3 rounded-2xl bg-[#FFB5C2]/40 border-2 border-[#2D232E] text-center">
+            <div class="text-xs font-extrabold text-[#5E4E60]">Avg Cycle Length</div>
+            <div id="stat-avg-cycle" class="font-fredoka text-2xl font-bold mt-0.5">28 days</div>
+          </div>
+          <div class="p-3 rounded-2xl bg-[#B8E0D2]/50 border-2 border-[#2D232E] text-center">
+            <div class="text-xs font-extrabold text-[#5E4E60]">Avg Period Length</div>
+            <div id="stat-avg-period" class="font-fredoka text-2xl font-bold mt-0.5">5 days</div>
+          </div>
+        </div>
+
+        <div class="mt-3">
+          <h3 class="text-xs font-extrabold text-[#6E5D6F] mb-2">Past Logged Cycles</h3>
+          <div id="past-cycles-list" class="space-y-2 max-h-48 overflow-y-auto pr-1">
+            <!-- Populated dynamically -->
+          </div>
+        </div>
+      </section>
+
+      <!-- Easy Migration from My Period Tracker -->
+      <section class="kawaii-card p-4 bg-[#FFFDF7]">
+        <h3 class="text-base font-bold mb-1">📥 Quick Import Past Start Dates</h3>
+        <p class="text-xs font-bold text-[#5E4E60] mb-2">
+          Switching from <em>My Period Tracker</em>? Paste past period start dates (<code>YYYY-MM-DD</code>, separated by commas or new lines) to calibrate predictions immediately:
+        </p>
+        <textarea id="bulk-dates-input" rows="2" placeholder="2026-08-15, 2026-09-12, 2026-10-10" class="w-full p-2.5 text-xs font-bold rounded-xl border-2 border-[#2D232E] bg-white focus:outline-none mb-2"></textarea>
+        <button type="button" onclick="importBulkStartDates()" class="btn-squish w-full py-2 px-4 text-xs bg-[#FDE49E]">
+          ✨ Import Start Dates
+        </button>
+      </section>
+
+      <!-- 100% Local-First JSON Backup & Reset -->
+      <section class="kawaii-card p-4 bg-[#F6F1E9]">
+        <h3 class="text-base font-bold mb-1">🔒 100% Local Privacy & Backups</h3>
+        <p class="text-xs font-bold text-[#5E4E60] mb-3">
+          Zero cloud accounts or tracking. Everything stays on this device unless you export a backup file:
+        </p>
+        <div class="grid grid-cols-2 gap-2 mb-2">
+          <button type="button" onclick="exportJsonBackup()" class="btn-squish py-2 px-3 text-xs bg-[#B8E0D2]">
+            ⬇️ Export JSON
+          </button>
+          <label class="btn-squish py-2 px-3 text-xs bg-[#D4C1EC] cursor-pointer text-center">
+            ⬆️ Restore JSON
+            <input type="file" accept=".json" onchange="importJsonBackup(event)" class="hidden" />
+          </label>
+        </div>
+        <div class="grid grid-cols-2 gap-2 pt-2 border-t-2 border-dashed border-[#D7CEC2]">
+          <button type="button" onclick="resetToDemoData()" class="btn-squish py-1.5 px-3 text-[11px] bg-white">
+            🔄 Load Demo Data
+          </button>
+          <button type="button" onclick="clearAllDataConfirm()" class="btn-squish py-1.5 px-3 text-[11px] bg-[#FFB5C2]">
+            🗑️ Clear All Data
+          </button>
+        </div>
+      </section>
+    </main>
+
+    <!-- ======================================================================
+         BOTTOM NAVIGATION DOCK
+         ====================================================================== -->
+    <nav class="bottom-nav">
+      <button type="button" id="nav-today" onclick="switchTab('today')" class="btn-squish nav-btn active">
+        🍓 Today
+      </button>
+      <button type="button" id="nav-calendar" onclick="switchTab('calendar')" class="btn-squish nav-btn">
+        📅 Calendar
+      </button>
+      <button type="button" id="nav-history" onclick="switchTab('history')" class="btn-squish nav-btn">
+        📊 Cycles & Backup
+      </button>
+    </nav>
+  </div>
+
+  <!-- ========================================================================
+       APPLICATION LOGIC & LOCAL-FIRST CYCLE ENGINE
+       ======================================================================== -->
+  <script>
+    const STORAGE_KEY = 'pocket_cycle_buddy_v2';
+
+    let appState = {
+      logs: {},
+      ignoreOutliers: true,
+      mascotSkin: 'mochi',
+      snackMenu: ['🧋 Brown Sugar Boba', '🍫 Dark Chocolate', '🔥 Heat Pack', '🍜 Warm Soup', '🤗 Extra Cuddles'],
+      selectedSnacks: []
+    };
+
+    let selectedDateStr = '';
+    let calendarViewDate = new Date();
+    let clearConfirmArmed = false;
+
+    /* --------------------------------------------------------------------------
+       DATE UTILITY HELPERS (Timezone-Safe Local YYYY-MM-DD)
+       -------------------------------------------------------------------------- */
+    function formatDateISO(dateObj) {
+      const y = dateObj.getFullYear();
+      const m = String(dateObj.getMonth() + 1).padStart(2, '0');
+      const d = String(dateObj.getDate()).padStart(2, '0');
+      return `${y}-${m}-${d}`;
+    }
+
+    function getTodayISO() {
+      return formatDateISO(new Date());
+    }
+
+    function parseISO(isoStr) {
+      const [y, m, d] = isoStr.split('-').map(Number);
+      return new Date(y, m - 1, d);
+    }
+
+    function addDaysISO(isoStr, days) {
+      const dt = parseISO(isoStr);
+      dt.setDate(dt.getDate() + days);
+      return formatDateISO(dt);
+    }
+
+    function diffDaysISO(startISO, endISO) {
+      const msPerDay = 1000 * 60 * 60 * 24;
+      const a = parseISO(startISO);
+      const b = parseISO(endISO);
+      return Math.round((b - a) / msPerDay);
+    }
+
+    function formatPrettyDate(isoStr) {
+      const dt = parseISO(isoStr);
+      return dt.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    }
+
+    selectedDateStr = getTodayISO();
+
+    /* --------------------------------------------------------------------------
+       CUTE WEB AUDIO SYNTH POP & CHIME FEEDBACK (Zero external files)
+       -------------------------------------------------------------------------- */
+    let audioCtx = null;
+    function playCuteSound(type = 'pop') {
+      try {
+        if (!audioCtx) {
+          const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+          if (!AudioContextClass) return;
+          audioCtx = new AudioContextClass();
+        }
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+
+        const now = audioCtx.currentTime;
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+
+        if (type === 'chime') {
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(523.25, now); // C5
+          osc.frequency.setValueAtTime(659.25, now + 0.08); // E5
+          osc.frequency.setValueAtTime(783.99, now + 0.16); // G5
+          gain.gain.setValueAtTime(0.12, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.38);
+          osc.start(now);
+          osc.stop(now + 0.39);
+        } else {
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(380, now);
+          osc.frequency.exponentialRampToValueAtTime(620, now + 0.07);
+          gain.gain.setValueAtTime(0.1, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
+          osc.start(now);
+          osc.stop(now + 0.09);
+        }
+      } catch (e) {
+        // Ignore audio errors on restricted devices
+      }
+    }
+
+    /* --------------------------------------------------------------------------
+       DEMO SEED DATA & STORAGE PERSISTENCE
+       -------------------------------------------------------------------------- */
+    function generateRealisticDemoLogs() {
+      const today = getTodayISO();
+      const demoLogs = {};
+
+      // Create 3 realistic past cycles (~28-29 days apart) so predictions work immediately
+      const cycleOffsets = [72, 44, 16]; // days ago each period started
+      const flowsByDay = ['medium', 'heavy', 'medium', 'light', 'light'];
+
+      cycleOffsets.forEach(startAgo => {
+        for (let d = 0; d < 5; d++) {
+          const iso = addDaysISO(today, -(startAgo - d));
+          demoLogs[iso] = {
+            isPeriod: true,
+            flow: flowsByDay[d],
+            symptoms: d === 0 ? ['cramps', 'sleepy'] : (d === 1 ? ['cramps', 'cravings'] : []),
+            habits: d === 0 ? ['water', 'heat'] : []
+          };
+        }
+      });
+
+      // Add a cute symptom log on today so the dashboard looks rich on first load
+      demoLogs[today] = {
+        isPeriod: false,
+        flow: null,
+        symptoms: ['cravings', 'sleepy'],
+        habits: ['water']
+      };
+
+      return demoLogs;
+    }
+
+    function saveState() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(appState));
+      } catch (e) {
+        console.error('Failed to save state:', e);
+      }
+    }
+
+    function loadState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          if (parsed && typeof parsed.logs === 'object') {
+            appState = {
+              logs: parsed.logs,
+              ignoreOutliers: parsed.ignoreOutliers !== undefined ? parsed.ignoreOutliers : true,
+              mascotSkin: parsed.mascotSkin || 'mochi',
+              snackMenu: Array.isArray(parsed.snackMenu) && parsed.snackMenu.length > 0
+                ? parsed.snackMenu
+                : ['🧋 Brown Sugar Boba', '🍫 Dark Chocolate', '🔥 Heat Pack', '🍜 Warm Soup', '🤗 Extra Cuddles'],
+              selectedSnacks: Array.isArray(parsed.selectedSnacks) ? parsed.selectedSnacks : []
+            };
+            return;
+          }
+        }
+      } catch (e) {
+        console.error('Failed to load state:', e);
+      }
+      // First-time launch: seed realistic demo data
+      appState.logs = generateRealisticDemoLogs();
+      saveState();
+    }
+
+    /* --------------------------------------------------------------------------
+       CYCLE EPISODE GROUPING & WEIGHTED MOVING AVERAGE PREDICTION ENGINE
+       -------------------------------------------------------------------------- */
+    function analyzeCycles() {
+      // 1. Collect all dates marked as period, sorted ascending
+      const periodDates = Object.keys(appState.logs)
+        .filter(dateStr => appState.logs[dateStr]?.isPeriod)
+        .sort();
+
+      // 2. Group consecutive period days (allowing up to 2-day gap) into episodes
+      const episodes = [];
+      periodDates.forEach(dateStr => {
+        if (episodes.length === 0) {
+          episodes.push({ start: dateStr, end: dateStr, days: [dateStr] });
+        } else {
+          const lastEp = episodes[episodes.length - 1];
+          const gap = diffDaysISO(lastEp.end, dateStr);
+          if (gap <= 2) {
+            lastEp.end = dateStr;
+            lastEp.days.push(dateStr);
+          } else {
+            episodes.push({ start: dateStr, end: dateStr, days: [dateStr] });
+          }
+        }
+      });
+
+      // 3. Calculate cycle lengths between consecutive episode start dates
+      const cycleLengths = [];
+      for (let i = 1; i < episodes.length; i++) {
+        const len = diffDaysISO(episodes[i - 1].start, episodes[i].start);
+        cycleLengths.push({
+          from: episodes[i - 1].start,
+          to: episodes[i].start,
+          length: len,
+          isOutlier: len < 21 || len > 38
+        });
+      }
+
+      // 4. Weighted Moving Average of recent cycles (last 6 cycles)
+      let validLengths = cycleLengths
+        .filter(c => !appState.ignoreOutliers || !c.isOutlier)
+        .map(c => c.length);
+
+      let avgCycleLength = 28;
+      if (validLengths.length > 0) {
+        const recent = validLengths.slice(-6);
+        let weightedSum = 0;
+        let weightTotal = 0;
+        recent.forEach((len, idx) => {
+          const weight = idx + 1;
+          weightedSum += len * weight;
+          weightTotal += weight;
+        });
+        avgCycleLength = Math.round(weightedSum / weightTotal);
+      }
+
+      // 5. Average period duration
+      let avgPeriodLength = 5;
+      if (episodes.length > 0) {
+        const recentEps = episodes.slice(-6);
+        const sumDays = recentEps.reduce((acc, ep) => acc + ep.days.length, 0);
+        avgPeriodLength = Math.max(2, Math.min(8, Math.round(sumDays / recentEps.length)));
+      }
+
+      // 6. Determine next 4 predicted period windows
+      const latestEpisode = episodes.length > 0 ? episodes[episodes.length - 1] : null;
+      const predictions = [];
+
+      if (latestEpisode) {
+        for (let i = 1; i <= 4; i++) {
+          const predStart = addDaysISO(latestEpisode.start, avgCycleLength * i);
+          const predEnd = addDaysISO(predStart, avgPeriodLength - 1);
+          const ovulationDay = addDaysISO(predStart, -14);
+          const fertileStart = addDaysISO(ovulationDay, -4);
+          const fertileEnd = addDaysISO(ovulationDay, 1);
+
+          predictions.push({
+            cycleIndex: i,
+            start: predStart,
+            end: predEnd,
+            fertileStart,
+            fertileEnd,
+            ovulationDay
+          });
+        }
+      }
+
+      return {
+        episodes,
+        cycleLengths,
+        avgCycleLength,
+        avgPeriodLength,
+        latestEpisode,
+        predictions
+      };
+    }
+
+    /* --------------------------------------------------------------------------
+       EXPRESSIVE REACTIVE SVG MASCOT BUDDY (With Outfit Skins!)
+       -------------------------------------------------------------------------- */
+    function getMascotSVG(mood, skin = 'mochi') {
+      // Cute pastel spirit buddy with expressive kawaii faces + custom ears/hats
+      const configs = {
+        period: {
+          fill: '#FFB5C2',
+          cheek: '#FF758F',
+          eyes: `<path d="M27 33 Q31 29 35 33" stroke="#2D232E" stroke-width="2.8" fill="none" stroke-linecap="round"/>
+                 <path d="M45 33 Q49 29 53 33" stroke="#2D232E" stroke-width="2.8" fill="none" stroke-linecap="round"/>`,
+          mouth: `<path d="M36 41 Q40 45 44 41" stroke="#2D232E" stroke-width="2.5" fill="none" stroke-linecap="round"/>`,
+          prop: `<text x="54" y="23" font-size="13">🍵</text>`
+        },
+        follicular: {
+          fill: '#B8E0D2',
+          cheek: '#FF9EBB',
+          eyes: `<circle cx="31" cy="32" r="3.2" fill="#2D232E"/><circle cx="49" cy="32" r="3.2" fill="#2D232E"/>
+                 <circle cx="32" cy="31" r="1" fill="#FFF"/><circle cx="50" cy="31" r="1" fill="#FFF"/>`,
+          mouth: `<path d="M35 39 Q40 46 45 39 Z" fill="#FF758F" stroke="#2D232E" stroke-width="2"/>`,
+          prop: `<text x="53" y="22" font-size="13">🌱</text>`
+        },
+        ovulation: {
+          fill: '#FDE49E',
+          cheek: '#FF8FA3',
+          eyes: `<text x="25" y="36" font-size="11">⭐</text><text x="44" y="36" font-size="11">⭐</text>`,
+          mouth: `<path d="M34 39 Q40 46 46 39" stroke="#2D232E" stroke-width="2.8" fill="none" stroke-linecap="round"/>`,
+          prop: `<text x="54" y="22" font-size="13">✨</text>`
+        },
+        luteal: {
+          fill: '#D4C1EC',
+          cheek: '#FFB5C2',
+          eyes: `<circle cx="31" cy="33" r="3" fill="#2D232E"/><circle cx="49" cy="33" r="3" fill="#2D232E"/>
+                 <line x1="27" y1="28" x2="34" y2="30" stroke="#2D232E" stroke-width="2.2" stroke-linecap="round"/>
+                 <line x1="53" y1="28" x2="46" y2="30" stroke="#2D232E" stroke-width="2.2" stroke-linecap="round"/>`,
+          mouth: `<path d="M36 42 Q40 39 44 42" stroke="#2D232E" stroke-width="2.5" fill="none" stroke-linecap="round"/>`,
+          prop: `<text x="53" y="23" font-size="13">🍫</text>`
+        }
+      };
+
+      const c = configs[mood] || configs.follicular;
+      let bodyFill = c.fill;
+      let earsMarkup = '';
+
+      if (skin === 'cat') {
+        earsMarkup = `
+          <polygon points="18,22 22,7 33,16" fill="#FFB5C2" stroke="#2D232E" stroke-width="2.6" stroke-linejoin="round"/>
+          <polygon points="62,22 58,7 47,16" fill="#FFB5C2" stroke="#2D232E" stroke-width="2.6" stroke-linejoin="round"/>
+        `;
+      } else if (skin === 'bear') {
+        bodyFill = '#F3D5B5';
+        earsMarkup = `
+          <circle cx="21" cy="15" r="7" fill="#D4A373" stroke="#2D232E" stroke-width="2.6"/>
+          <circle cx="59" cy="15" r="7" fill="#D4A373" stroke="#2D232E" stroke-width="2.6"/>
+        `;
+      } else if (skin === 'frog') {
+        bodyFill = '#B8E0D2';
+        earsMarkup = `
+          <circle cx="26" cy="14" r="6.5" fill="#B8E0D2" stroke="#2D232E" stroke-width="2.6"/>
+          <circle cx="54" cy="14" r="6.5" fill="#B8E0D2" stroke="#2D232E" stroke-width="2.6"/>
+          <circle cx="26" cy="14" r="2.2" fill="#2D232E"/>
+          <circle cx="54" cy="14" r="2.2" fill="#2D232E"/>
+        `;
+      }
+
+      return `
+        <svg viewBox="0 0 80 64" class="w-20 h-16 overflow-visible">
+          ${earsMarkup}
+          <!-- Squishy Cloud/Mochi Body -->
+          <path d="M22 50 C12 50 8 42 12 34 C10 24 19 16 29 18 C34 11 46 11 51 18 C61 16 70 24 68 34 C72 42 68 50 58 50 Z"
+                fill="${bodyFill}" stroke="#2D232E" stroke-width="2.8" stroke-linejoin="round"/>
+          <!-- Rosy Cheeks -->
+          <ellipse cx="24" cy="38" rx="4" ry="2.4" fill="${c.cheek}" opacity="0.85"/>
+          <ellipse cx="56" cy="38" rx="4" ry="2.4" fill="${c.cheek}" opacity="0.85"/>
+          <!-- Eyes & Mouth -->
+          ${c.eyes}
+          ${c.mouth}
+          <!-- Cute Phase Prop -->
+          ${c.prop}
+        </svg>
+      `;
+    }
+
+    /* --------------------------------------------------------------------------
+       PHASE & PARTNER QUEST RESOLVER
+       -------------------------------------------------------------------------- */
+    function getPhaseInfo(cycleDay, avgCycleLength, isPeriodLoggedToday) {
+      if (isPeriodLoggedToday || cycleDay <= 5) {
+        return {
+          key: 'period',
+          badgeText: '🩸 Cozy Shark Week',
+          badgeBg: '#FFB5C2',
+          ringSubtitle: isPeriodLoggedToday ? 'Period active • Be extra gentle' : 'Expected window • Keep pads handy',
+          questTitle: 'Quest: Boba, Heating Pad & Blanket Burrito',
+          questDesc: 'Cramp shield active! Optimal boyfriend move: bring warm comfort drinks, zero chores, and cozy movie cuddles.'
+        };
+      }
+
+      const ovulationEstDay = Math.max(10, avgCycleLength - 14);
+      if (cycleDay >= ovulationEstDay - 3 && cycleDay <= ovulationEstDay + 1) {
+        return {
+          key: 'ovulation',
+          badgeText: '✨ Main Character Peak',
+          badgeBg: '#FDE49E',
+          ringSubtitle: 'Peak sparkle & social energy!',
+          questTitle: 'Quest: Fun Date Night or Outdoor Adventure',
+          questDesc: 'Energy and confidence are peaking! Great window for a cute dinner date, scenic walk, or trying a new cafe together.'
+        };
+      }
+
+      if (cycleDay < ovulationEstDay - 3) {
+        return {
+          key: 'follicular',
+          badgeText: '🌱 Fresh Sprout Energy',
+          badgeBg: '#B8E0D2',
+          ringSubtitle: 'Energy rising • Feeling fresh',
+          questTitle: 'Quest: Spontaneous Mini-Adventure',
+          questDesc: 'Post-period bounce-back is here! Good time for active weekend plans, rides, or ticking off fun wishlist spots.'
+        };
+      }
+
+      return {
+        key: 'luteal',
+        badgeText: '🍫 Snack Gremlin Luteal',
+        badgeBg: '#D4C1EC',
+        ringSubtitle: 'Winding down • Protect peace',
+        questTitle: 'Quest: Emergency Chocolate & Chill Vibes',
+        questDesc: 'Pre-period energy dip incoming. Stock up on her favorite sweet/salty snacks and keep plans low-pressure.'
+      };
+    }
+
+    /* --------------------------------------------------------------------------
+       RENDER TODAY DASHBOARD
+       -------------------------------------------------------------------------- */
+    function renderTodayView() {
+      const todayISO = getTodayISO();
+      const analysis = analyzeCycles();
+      const dayLog = appState.logs[selectedDateStr] || { isPeriod: false, flow: null, symptoms: [] };
+
+      // Header Date
+      const todayFormatted = new Date().toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+      document.getElementById('header-date-label').textContent = todayFormatted;
+
+      // Show editing banner if inspecting another date
+      const editBanner = document.getElementById('editing-date-banner');
+      if (selectedDateStr !== todayISO) {
+        editBanner.classList.remove('hidden');
+        document.getElementById('editing-date-text').textContent = formatPrettyDate(selectedDateStr);
+      } else {
+        editBanner.classList.add('hidden');
+      }
+
+      // Compute Cycle Day relative to most recent episode on or before selectedDateStr
+      const pastEpisodes = analysis.episodes.filter(ep => ep.start <= selectedDateStr);
+      const activeEpisode = pastEpisodes.length > 0 ? pastEpisodes[pastEpisodes.length - 1] : null;
+
+      let cycleDay = 1;
+      let daysUntilNext = analysis.avgCycleLength;
+      if (activeEpisode) {
+        cycleDay = diffDaysISO(activeEpisode.start, selectedDateStr) + 1;
+        daysUntilNext = analysis.avgCycleLength - (cycleDay - 1);
+      }
+
+      // Phase info & Mascot
+      const phase = getPhaseInfo(cycleDay, analysis.avgCycleLength, dayLog.isPeriod);
+      const phaseBadge = document.getElementById('phase-badge');
+      phaseBadge.textContent = phase.badgeText;
+      phaseBadge.style.backgroundColor = phase.badgeBg;
+
+      document.getElementById('cycle-avg-pill').textContent = `Avg: ${analysis.avgCycleLength}d cycle`;
+      document.getElementById('mascot-container').innerHTML = getMascotSVG(phase.key, appState.mascotSkin);
+      document.getElementById('ring-day-title').textContent = activeEpisode ? `Day ${cycleDay}` : 'No Logs Yet';
+
+      if (!activeEpisode) {
+        document.getElementById('ring-subtitle').textContent = 'Tap below to start logging!';
+      } else if (dayLog.isPeriod) {
+        document.getElementById('ring-subtitle').textContent = phase.ringSubtitle;
+      } else if (daysUntilNext > 0) {
+        document.getElementById('ring-subtitle').textContent = `Next period in ~${daysUntilNext}d`;
+      } else if (daysUntilNext === 0) {
+        document.getElementById('ring-subtitle').textContent = 'Predicted to start today!';
+      } else {
+        document.getElementById('ring-subtitle').textContent = `${Math.abs(daysUntilNext)}d past predicted window`;
+      }
+
+      // Update Circular SVG Ring Arcs (Circumference = 2 * PI * 88 ≈ 553)
+      const CIRC = 553;
+      const totalDays = Math.max(21, analysis.avgCycleLength);
+      const clampedDay = Math.max(1, Math.min(totalDays, cycleDay));
+      const progressRatio = activeEpisode ? (clampedDay / totalDays) : 0.05;
+
+      // Period Arc (first ~5 days)
+      const periodRatio = Math.min(0.35, analysis.avgPeriodLength / totalDays);
+      document.getElementById('ring-period-arc').style.strokeDashoffset = CIRC * (1 - periodRatio);
+
+      // Fertile Window Arc (around ovulation day)
+      const fertRatio = 6 / totalDays;
+      const fertStartRatio = Math.max(0.25, (totalDays - 18) / totalDays);
+      const fertileArc = document.getElementById('ring-fertile-arc');
+      fertileArc.style.strokeDashoffset = CIRC * (1 - fertRatio);
+      fertileArc.style.transform = `rotate(${fertStartRatio * 360}deg)`;
+      fertileArc.style.transformOrigin = '110px 110px';
+
+      // Current Day Progress Arc
+      document.getElementById('ring-progress-arc').style.strokeDashoffset = CIRC * (1 - progressRatio);
+
+      // Hero Action Button State
+      const heroBtn = document.getElementById('hero-period-btn');
+      const heroEmoji = document.getElementById('hero-btn-emoji');
+      const heroLabel = document.getElementById('hero-btn-label');
+      if (dayLog.isPeriod) {
+        heroBtn.style.backgroundColor = '#B8E0D2';
+        heroEmoji.textContent = '✅';
+        heroLabel.textContent = 'Period Logged! (Tap to Unmark)';
+      } else {
+        heroBtn.style.backgroundColor = '#FFB5C2';
+        heroEmoji.textContent = '🩸';
+        heroLabel.textContent = selectedDateStr === todayISO ? 'Period Started Today!' : 'Mark Period on This Day';
+      }
+
+      // Flow Intensity Pills UI
+      document.querySelectorAll('#flow-pills-group button').forEach(btn => {
+        const f = btn.getAttribute('data-flow');
+        const active = dayLog.flow === f;
+        btn.classList.toggle('is-selected', active);
+        btn.style.backgroundColor = active ? '#FFB5C2' : '#FFFFFF';
+      });
+
+      // Highlight active Mascot Skin button
+      document.querySelectorAll('[data-skin]').forEach(btn => {
+        const isCurrent = btn.getAttribute('data-skin') === appState.mascotSkin;
+        btn.style.backgroundColor = isCurrent ? '#FDE49E' : '#FFFFFF';
+        btn.classList.toggle('is-selected', isCurrent);
+      });
+
+      // Symptom Stickers UI
+      const activeSymptoms = dayLog.symptoms || [];
+      document.querySelectorAll('#symptom-stickers-group button').forEach(btn => {
+        const s = btn.getAttribute('data-symptom');
+        if (activeSymptoms.includes(s)) {
+          btn.classList.add('is-selected');
+        } else {
+          btn.classList.remove('is-selected');
+        }
+      });
+
+      // Daily Self-Care Habits UI
+      const activeHabits = dayLog.habits || [];
+      document.querySelectorAll('#care-habits-group button').forEach(btn => {
+        const h = btn.getAttribute('data-habit');
+        const active = activeHabits.includes(h);
+        btn.classList.toggle('is-selected', active);
+        btn.style.backgroundColor = active ? '#B8E0D2' : '#FFFFFF';
+      });
+
+      // Snack / Care Request Pills UI
+      renderSnackPills();
+
+      // Log Status Chip
+      const hasAnyLog = dayLog.isPeriod || dayLog.flow || activeSymptoms.length > 0 || activeHabits.length > 0;
+      document.getElementById('log-status-chip').textContent = hasAnyLog ? '✅ Saved locally' : 'Tap to log';
+
+      // Partner Quest Update (tailored if cramps/cravings/spicy logged)
+      let questTitle = phase.questTitle;
+      let questDesc = phase.questDesc;
+      if (activeSymptoms.includes('cramps')) {
+        questTitle = '🚨 Priority Quest: Heating Pad & Pain Relief';
+        questDesc = 'Cramps logged! Boyfriend duty: deploy warm heating pad, tea/water, and gentle back rubs immediately.';
+      } else if (activeSymptoms.includes('cravings')) {
+        questTitle = '🍫 Snack Alert: Sweet/Salty Treat Drop';
+        questDesc = 'Cravings detected! Surprise treat delivery unlocks +500 boyfriend points.';
+      } else if (activeSymptoms.includes('spicy')) {
+        questTitle = '🌶️ Handle With Care: Extra Patience Mode';
+        questDesc = 'Spicy mood unlocked! Validate feelings, bring snacks, and keep vibes extra supportive.';
+      }
+      document.getElementById('quest-title').textContent = questTitle;
+      document.getElementById('quest-desc').textContent = questDesc;
+    }
+
+    /* --------------------------------------------------------------------------
+       INTERACTIVE USER ACTIONS (Hero Toggle, Flow, Symptoms, Confetti)
+       -------------------------------------------------------------------------- */
+    function triggerSparkleBurst(x, y) {
+      const emojis = ['🌸', '✨', '🍓', '💖', '🧸', '⭐'];
+      for (let i = 0; i < 14; i++) {
+        const el = document.createElement('span');
+        el.className = 'confetti-piece';
+        el.textContent = emojis[i % emojis.length];
+        el.style.left = `${x}px`;
+        el.style.top = `${y}px`;
+        const angle = (Math.PI * 2 * i) / 14;
+        const dist = 55 + Math.random() * 65;
+        el.style.setProperty('--tx', `${Math.cos(angle) * dist}px`);
+        el.style.setProperty('--ty', `${Math.sin(angle) * dist - 30}px`);
+        el.style.setProperty('--rot', `${(Math.random() - 0.5) * 360}deg`);
+        document.body.appendChild(el);
+        setTimeout(() => el.remove(), 1200);
+      }
+    }
+
+    function handleHeroPeriodToggle(event) {
+      const current = appState.logs[selectedDateStr] || { isPeriod: false, flow: null, symptoms: [], habits: [] };
+      const turningOn = !current.isPeriod;
+
+      appState.logs[selectedDateStr] = {
+        ...current,
+        isPeriod: turningOn,
+        flow: turningOn ? (current.flow || 'medium') : null
+      };
+
+      saveState();
+      renderAll();
+
+      if (turningOn) {
+        playCuteSound('chime');
+        const rect = event.currentTarget.getBoundingClientRect();
+        triggerSparkleBurst(rect.left + rect.width / 2, rect.top + rect.height / 2);
+        showToast('🩸 Period logged! Take it cozy today.');
+      } else {
+        playCuteSound('pop');
+        showToast('Unmarked period for this date.');
+      }
+    }
+
+    function petMascot(event) {
+      playCuteSound('chime');
+      const rect = event.currentTarget.getBoundingClientRect();
+      triggerSparkleBurst(rect.left + rect.width / 2, rect.top + rect.height / 2);
+      const messages = [
+        '💖 Your Cycle Buddy purrs happily!',
+        '✨ +10 Cozy Morale! You got this!',
+        '🍓 Sending warm virtual hugs & snacks!'
+      ];
+      showToast(messages[Math.floor(Math.random() * messages.length)]);
+    }
+
+    function setMascotSkin(skinKey) {
+      playCuteSound('pop');
+      appState.mascotSkin = skinKey;
+      saveState();
+      renderTodayView();
+    }
+
+    function toggleFlow(flowLevel) {
+      playCuteSound('pop');
+      const current = appState.logs[selectedDateStr] || { isPeriod: false, flow: null, symptoms: [], habits: [] };
+      const nextFlow = current.flow === flowLevel ? null : flowLevel;
+
+      appState.logs[selectedDateStr] = {
+        ...current,
+        flow: nextFlow,
+        isPeriod: nextFlow ? true : current.isPeriod
+      };
+
+      saveState();
+      renderAll();
+    }
+
+    function toggleSymptom(symptomKey) {
+      playCuteSound('pop');
+      const current = appState.logs[selectedDateStr] || { isPeriod: false, flow: null, symptoms: [], habits: [] };
+      const list = new Set(current.symptoms || []);
+      if (list.has(symptomKey)) {
+        list.delete(symptomKey);
+      } else {
+        list.add(symptomKey);
+      }
+
+      appState.logs[selectedDateStr] = {
+        ...current,
+        symptoms: Array.from(list)
+      };
+
+      saveState();
+      renderTodayView();
+    }
+
+    function toggleHabit(habitKey, event) {
+      const current = appState.logs[selectedDateStr] || { isPeriod: false, flow: null, symptoms: [], habits: [] };
+      const list = new Set(current.habits || []);
+      const completing = !list.has(habitKey);
+
+      if (completing) {
+        list.add(habitKey);
+        playCuteSound('chime');
+        if (event) {
+          const rect = event.currentTarget.getBoundingClientRect();
+          triggerSparkleBurst(rect.left + rect.width / 2, rect.top + rect.height / 2);
+        }
+      } else {
+        list.delete(habitKey);
+        playCuteSound('pop');
+      }
+
+      appState.logs[selectedDateStr] = {
+        ...current,
+        habits: Array.from(list)
+      };
+
+      saveState();
+      renderTodayView();
+    }
+
+    function renderSnackPills() {
+      const container = document.getElementById('snack-request-pills');
+      if (!container) return;
+      container.innerHTML = '';
+
+      appState.snackMenu.forEach(item => {
+        const isSelected = appState.selectedSnacks.includes(item);
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = `btn-squish px-2.5 py-1 text-[11px] rounded-xl ${isSelected ? 'is-selected' : ''}`;
+        btn.style.backgroundColor = isSelected ? '#FFB5C2' : '#FFFDF7';
+        btn.textContent = item;
+        btn.onclick = () => {
+          playCuteSound('pop');
+          if (isSelected) {
+            appState.selectedSnacks = appState.selectedSnacks.filter(s => s !== item);
+          } else {
+            appState.selectedSnacks.push(item);
+          }
+          saveState();
+          renderSnackPills();
+        };
+        container.appendChild(btn);
+      });
+    }
+
+    function toggleCustomSnackEditor() {
+      playCuteSound('pop');
+      const form = document.getElementById('custom-snack-form');
+      form.classList.toggle('hidden');
+      if (!form.classList.contains('hidden')) {
+        document.getElementById('custom-snack-input').focus();
+      }
+    }
+
+    function addCustomSnackOption() {
+      const input = document.getElementById('custom-snack-input');
+      const val = input.value.trim();
+      if (!val) return;
+      if (!appState.snackMenu.includes(val)) {
+        appState.snackMenu.push(val);
+      }
+      if (!appState.selectedSnacks.includes(val)) {
+        appState.selectedSnacks.push(val);
+      }
+      input.value = '';
+      document.getElementById('custom-snack-form').classList.add('hidden');
+      playCuteSound('chime');
+      saveState();
+      renderSnackPills();
+      showToast(`Added "${val}" to care menu!`);
+    }
+
+    function copyPartnerPing() {
+      const analysis = analyzeCycles();
+      const dayLog = appState.logs[selectedDateStr] || { isPeriod: false, flow: null, symptoms: [] };
+      const pastEpisodes = analysis.episodes.filter(ep => ep.start <= selectedDateStr);
+      const activeEpisode = pastEpisodes.length > 0 ? pastEpisodes[pastEpisodes.length - 1] : null;
+      const cycleDay = activeEpisode ? diffDaysISO(activeEpisode.start, selectedDateStr) + 1 : 1;
+      const phase = getPhaseInfo(cycleDay, analysis.avgCycleLength, dayLog.isPeriod);
+
+      const symptomMap = {
+        cramps: '🤕 Cramps',
+        cravings: '🍫 Snack Cravings',
+        sleepy: '😴 Sleepy Sloth',
+        spicy: '😤 Spicy Mood',
+        bloated: '🐡 Bloated',
+        glowing: '✨ Feeling Great'
+      };
+      const symText = (dayLog.symptoms || []).map(s => symptomMap[s] || s).join(', ');
+      const nextPred = analysis.predictions[0] ? formatPrettyDate(analysis.predictions[0].start) : 'TBD';
+      const snackText = appState.selectedSnacks.length > 0 ? appState.selectedSnacks.join(', ') : '';
+
+      const message =
+        `🍓 Cycle Buddy Update (Day ${cycleDay} • ${phase.badgeText}):\n` +
+        (dayLog.isPeriod ? `• Status: Period active (${dayLog.flow || 'medium'} flow)\n` : `• Next predicted period: ${nextPred}\n`) +
+        (symText ? `• Current vibes: ${symText}\n` : '') +
+        (snackText ? `• Requested care drop: ${snackText}\n` : '') +
+        `• ${document.getElementById('quest-title').textContent}`;
+
+      // Reliable iFrame-friendly clipboard copy using textarea + execCommand
+      const tempInput = document.createElement('textarea');
+      tempInput.value = message;
+      document.body.appendChild(tempInput);
+      tempInput.select();
+      try {
+        document.execCommand('copy');
+        playCuteSound('chime');
+        showToast('💌 Cute care update copied! Paste it to him.');
+      } catch (err) {
+        showToast('Could not copy automatically.');
+      }
+      document.body.removeChild(tempInput);
+    }
+
+    /* --------------------------------------------------------------------------
+       RENDER CALENDAR & 3-MONTH TRIP FORECAST
+       -------------------------------------------------------------------------- */
+    function changeCalendarMonth(delta) {
+      calendarViewDate.setMonth(calendarViewDate.getMonth() + delta);
+      renderCalendarView();
+    }
+
+    function renderCalendarView() {
+      const year = calendarViewDate.getFullYear();
+      const month = calendarViewDate.getMonth();
+      const monthLabel = calendarViewDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+      document.getElementById('cal-month-title').textContent = monthLabel;
+
+      const analysis = analyzeCycles();
+      const todayISO = getTodayISO();
+
+      // Build quick lookup sets for predicted period & fertile days
+      const predictedPeriodSet = new Set();
+      const fertileSet = new Set();
+
+      analysis.predictions.forEach(pred => {
+        let cur = pred.start;
+        while (cur <= pred.end) {
+          predictedPeriodSet.add(cur);
+          cur = addDaysISO(cur, 1);
+        }
+        let fCur = pred.fertileStart;
+        while (fCur <= pred.fertileEnd) {
+          fertileSet.add(fCur);
+          fCur = addDaysISO(fCur, 1);
+        }
+      });
+
+      const firstDayOfMonth = new Date(year, month, 1).getDay();
+      const daysInMonth = new Date(year, month + 1, 0).getDate();
+      const grid = document.getElementById('calendar-days-grid');
+      grid.innerHTML = '';
+
+      // Leading blank cells
+      for (let i = 0; i < firstDayOfMonth; i++) {
+        const blank = document.createElement('div');
+        grid.appendChild(blank);
+      }
+
+      // Day buttons
+      for (let d = 1; d <= daysInMonth; d++) {
+        const iso = formatDateISO(new Date(year, month, d));
+        const log = appState.logs[iso];
+        const isLoggedPeriod = Boolean(log?.isPeriod);
+        const isPredictedPeriod = !isLoggedPeriod && predictedPeriodSet.has(iso);
+        const isFertile = !isLoggedPeriod && !isPredictedPeriod && fertileSet.has(iso);
+        const isToday = iso === todayISO;
+        const hasSymptoms = (log?.symptoms || []).length > 0;
+
+        let bg = '#FFFFFF';
+        let borderStyle = 'border-2 border-[#2D232E]';
+        if (isLoggedPeriod) {
+          bg = '#FFB5C2';
+        } else if (isPredictedPeriod) {
+          bg = '#FFD6BA';
+          borderStyle = 'border-2 border-dashed border-[#2D232E]';
+        } else if (isFertile) {
+          bg = '#B8E0D2';
+        }
+
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = `btn-squish h-11 rounded-xl flex flex-col items-center justify-center text-xs font-extrabold ${borderStyle} ${isToday ? 'ring-2 ring-[#2D232E] ring-offset-1' : ''}`;
+        btn.style.backgroundColor = bg;
+        btn.style.boxShadow = '2px 2px 0px #2D232E';
+        btn.innerHTML = `
+          <span>${d}</span>
+          <span class="text-[9px] leading-none h-2.5">${isLoggedPeriod ? '🩸' : (hasSymptoms ? '✨' : '')}</span>
+        `;
+
+        btn.onclick = () => {
+          selectedDateStr = iso;
+          switchTab('today');
+          showToast(`Selected ${formatPrettyDate(iso)} — tap button to log!`);
+        };
+
+        grid.appendChild(btn);
+      }
+
+      // Render 3-Month Trip & Adventure Forecast
+      const forecastList = document.getElementById('forecast-list');
+      forecastList.innerHTML = '';
+      if (analysis.predictions.length === 0) {
+        forecastList.innerHTML = `<p class="text-xs font-bold text-[#6E5D6F]">Log at least one period to unlock your 3-month trip forecast!</p>`;
+      } else {
+        analysis.predictions.slice(0, 3).forEach((pred, idx) => {
+          const item = document.createElement('div');
+          item.className = 'p-2.5 px-3 rounded-xl bg-white border-2 border-[#2D232E] flex items-center justify-between text-xs font-extrabold';
+          item.innerHTML = `
+            <div>
+              <span class="text-[#6E5D6F]">Cycle +${idx + 1}:</span>
+              <span class="ml-1">${formatPrettyDate(pred.start)} – ${formatPrettyDate(pred.end)}</span>
+            </div>
+            <span class="px-2 py-0.5 rounded-lg bg-[#FFD6BA] border border-[#2D232E]">🩸 Est.</span>
+          `;
+          forecastList.appendChild(item);
+        });
+      }
+    }
+
+    /* --------------------------------------------------------------------------
+       RENDER HISTORY, MIGRATION & BACKUP VIEW
+       -------------------------------------------------------------------------- */
+    function renderHistoryView() {
+      const analysis = analyzeCycles();
+      document.getElementById('ignore-outliers-checkbox').checked = appState.ignoreOutliers;
+      document.getElementById('stat-avg-cycle').textContent = `${analysis.avgCycleLength} days`;
+      document.getElementById('stat-avg-period').textContent = `${analysis.avgPeriodLength} days`;
+
+      const listEl = document.getElementById('past-cycles-list');
+      listEl.innerHTML = '';
+
+      if (analysis.episodes.length === 0) {
+        listEl.innerHTML = `<p class="text-xs font-bold text-[#6E5D6F]">No periods logged yet. Use the Today tab or Bulk Import below!</p>`;
+        return;
+      }
+
+      // Show newest episodes first
+      const reversed = [...analysis.episodes].reverse();
+      reversed.forEach((ep, idx) => {
+        // Find matching cycle length if available
+        const nextEp = reversed[idx - 1];
+        const cycleLen = nextEp ? diffDaysISO(ep.start, nextEp.start) : null;
+        const isOutlier = cycleLen !== null && (cycleLen < 21 || cycleLen > 38);
+
+        const row = document.createElement('div');
+        row.className = 'p-2.5 px-3 rounded-xl bg-[#FFFDF7] border-2 border-[#2D232E] flex items-center justify-between text-xs font-extrabold';
+        row.innerHTML = `
+          <div>
+            <div>🩸 ${formatPrettyDate(ep.start)} → ${formatPrettyDate(ep.end)}</div>
+            <div class="text-[11px] text-[#6E5D6F]">Duration: ${ep.days.length} day${ep.days.length === 1 ? '' : 's'}</div>
+          </div>
+          <div class="text-right">
+            ${cycleLen !== null
+              ? `<span class="px-2 py-1 rounded-lg border border-[#2D232E] ${isOutlier ? 'bg-[#FDE49E]' : 'bg-[#B8E0D2]'}">
+                   ${cycleLen}d cycle ${isOutlier ? '(Outlier)' : ''}
+                 </span>`
+              : `<span class="px-2 py-1 rounded-lg bg-[#FFB5C2] border border-[#2D232E]">Current</span>`
+            }
+          </div>
+        `;
+        listEl.appendChild(row);
+      });
+    }
+
+    function toggleOutlierFilter() {
+      appState.ignoreOutliers = document.getElementById('ignore-outliers-checkbox').checked;
+      saveState();
+      renderAll();
+      showToast(appState.ignoreOutliers ? 'Outlier cycles ignored in average!' : 'All cycles included in average.');
+    }
+
+    function importBulkStartDates() {
+      const raw = document.getElementById('bulk-dates-input').value.trim();
+      if (!raw) {
+        showToast('Paste at least one YYYY-MM-DD date first!');
+        return;
+      }
+
+      const tokens = raw.split(/[\s,;]+/).filter(Boolean);
+      let importedCount = 0;
+
+      tokens.forEach(token => {
+        if (/^\d{4}-\d{2}-\d{2}$/.test(token)) {
+          for (let d = 0; d < 5; d++) {
+            const iso = addDaysISO(token, d);
+            const existing = appState.logs[iso] || { symptoms: [] };
+            appState.logs[iso] = {
+              isPeriod: true,
+              flow: existing.flow || (d < 3 ? 'medium' : 'light'),
+              symptoms: existing.symptoms || []
+            };
+          }
+          importedCount++;
+        }
+      });
+
+      if (importedCount > 0) {
+        saveState();
+        document.getElementById('bulk-dates-input').value = '';
+        renderAll();
+        showToast(`✨ Imported ${importedCount} past cycle${importedCount === 1 ? '' : 's'}!`);
+      } else {
+        showToast('No valid YYYY-MM-DD dates found.');
+      }
+    }
+
+    function exportJsonBackup() {
+      const dataStr = JSON.stringify(appState, null, 2);
+      const blob = new Blob([dataStr], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `pocket-cycle-buddy-backup-${getTodayISO()}.json`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      showToast('⬇️ Backup JSON downloaded!');
+    }
+
+    function importJsonBackup(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          const parsed = JSON.parse(e.target.result);
+          if (parsed && typeof parsed.logs === 'object') {
+            appState = {
+              logs: parsed.logs,
+              ignoreOutliers: parsed.ignoreOutliers !== undefined ? parsed.ignoreOutliers : true
+            };
+            saveState();
+            renderAll();
+            showToast('⬆️ Backup restored successfully!');
+          } else {
+            showToast('Invalid backup file format.');
+          }
+        } catch (err) {
+          showToast('Could not read JSON file.');
+        }
+      };
+      reader.readAsText(file);
+      event.target.value = '';
+    }
+
+    function resetToDemoData() {
+      appState.logs = generateRealisticDemoLogs();
+      selectedDateStr = getTodayISO();
+      saveState();
+      renderAll();
+      showToast('🔄 Demo cycles reloaded!');
+    }
+
+    function clearAllDataConfirm() {
+      if (!clearConfirmArmed) {
+        clearConfirmArmed = true;
+        showToast('⚠️ Tap "Clear All Data" once more to wipe everything.');
+        setTimeout(() => { clearConfirmArmed = false; }, 4000);
+        return;
+      }
+      clearConfirmArmed = false;
+      appState.logs = {};
+      selectedDateStr = getTodayISO();
+      saveState();
+      renderAll();
+      showToast('🗑️ All logs cleared! Ready for a fresh start.');
+    }
+
+    /* --------------------------------------------------------------------------
+       TAB NAVIGATION & TOAST FEEDBACK
+       -------------------------------------------------------------------------- */
+    function switchTab(tabName) {
+      ['today', 'calendar', 'history'].forEach(name => {
+        document.getElementById(`view-${name}`).classList.toggle('hidden', name !== tabName);
+        document.getElementById(`nav-${name}`).classList.toggle('active', name === tabName);
+      });
+
+      if (tabName === 'calendar') renderCalendarView();
+      if (tabName === 'history') renderHistoryView();
+      if (tabName === 'today') renderTodayView();
+    }
+
+    function openDateJumpToday() {
+      selectedDateStr = getTodayISO();
+      calendarViewDate = new Date();
+      switchTab('today');
+    }
+
+    let toastTimer = null;
+    function showToast(msg) {
+      const box = document.getElementById('toast-box');
+      document.getElementById('toast-text').textContent = msg;
+      box.classList.remove('hidden');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(hideToast, 3200);
+    }
+
+    function hideToast() {
+      document.getElementById('toast-box').classList.add('hidden');
+    }
+
+    function renderAll() {
+      renderTodayView();
+      renderCalendarView();
+      renderHistoryView();
+    }
+
+    // Boot Application
+    window.onload = function() {
+      loadState();
+      renderAll();
+    };
+  </script>
+</body>
+</html>
